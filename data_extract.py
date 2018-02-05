@@ -1,4 +1,5 @@
 import wikipedia
+import re
 
 oscar = wikipedia.page('Academy_Awards')
 
