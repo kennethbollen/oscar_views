@@ -1,13 +1,30 @@
-import wikipedia
+import bs4
 import re
 import pandas as pd
 
-oscar = wikipedia.page('Academy_Awards')
+academy_shows = []
 
-oscar_shows = []
-oscar_edition = []
+url = 'https://en.wikipedia.org/wiki/Academy_Awards'
+req = requests.get(url)
+req.raise_for_status()
+soup = bs4.BeautifulSoup(req.text)
 
-#collect all the links for the annual oscar shows
+for link in soup.find_all('ul', href=True):
+    if re.search('/wiki/*.*_Academy_Awards',links['href']) is not None:
+        academy_shows.append(links['href'])
+
+#clean data for the list of all the acadmey awards
+for i in academy_shows:        
+    for i in academy_shows:
+        if i[:6] == '/wiki/':
+            x = i.strip('/wiki/')
+            academy_shows.remove(i)
+            academy_shows.append(x)
+    for i in academy_shows:
+        if len(i) > 19:
+            academy_shows.remove(i)
+
+'''#collect all the links for the annual oscar shows
 for i in oscar.links:
     if re.search('.th Academy Awards', i) is not None:
         oscar_shows.append(i)
@@ -33,3 +50,7 @@ for i in oscar_shows:
 oscars = pd.DataFrame({'oscar_number':oscar_edition,'oscar_show':oscar_shows})   
 #sort the oscar data by edition number 
 oscars = oscars.sort_values('oscar_number')
+
+#loop through the oscar pages
+for index, row in oscars.iterrows():
+    edition = wikipedia.page(row['oscar_show'])'''
