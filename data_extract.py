@@ -3,27 +3,32 @@ import requests
 import re
 import pandas as pd
 
-academy_shows = []
+oscar_pages = []
+oscar_shows = []
 
 url = 'https://en.wikipedia.org/wiki/Academy_Awards'
 req = requests.get(url)
 req.raise_for_status()
 soup = bs4.BeautifulSoup(req.text)
 
-for link in soup.find_all('ul', href=True):
-    if re.search('/wiki/*.*_Academy_Awards',links['href']) is not None:
-        academy_shows.append(links['href'])
+for link in soup.find_all('a', href=True, title=True):
+	if re.search('. Academy Awards', link['title']) is not None:
+		oscar_pages.append(link['href'])
 
-#clean data for the list of all the acadmey awards
-for i in academy_shows:        
-    for i in academy_shows:
-        if i[:6] == '/wiki/':
-            x = i.strip('/wiki/')
-            academy_shows.remove(i)
-            academy_shows.append(x)
-    for i in academy_shows:
-        if len(i) > 19:
-            academy_shows.remove(i)
+#clean and upload
+for i in range(len(oscar_pages)):
+	if len(oscar_pages[int(i)]) > 25:
+		del(oscar_pages[int(i)])
+        
+#remove the duplicates and create a numpy array
+df_pages = pd.Series(oscar_pages)
+df_shows = pd.Series(oscar_shows)
+df_pages = df_pages.unique()
+df_shows = df_shows.unique()
+
+
+
+
 
 '''#collect all the links for the annual oscar shows
 for i in oscar.links:
